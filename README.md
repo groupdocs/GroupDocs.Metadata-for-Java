@@ -16,7 +16,12 @@ Directory | Description
 --------- | -----------
 [Examples](https://github.com/groupdocs-metadata/GroupDocs.Metadata-for-Java/tree/master/Examples)  | Contains the package of all Java examples and sample files that will help you learn how to use product features. 
 
-#  Resources
+## How to Run the Examples
+Please see the following article that explains how to run the GroupDocs.Metadata for Java Console Examples.
+
++ [How to Run the Examples](https://docs.groupdocs.com/display/metadatajava/How+to+Run+Examples)
+
+##  Resources
 
 + **Website:** [www.groupdocs.com](https://www.groupdocs.com)
 + **Product Home:** [GroupDocs.Metadata for Java](https://products.groupdocs.com/metadata/java)

@@ -178,4 +178,285 @@ public class VideoFormats {
 
 		}
 	}
+
+	public static class Mkv {
+		private static String path = "\\Videos\\Mkv\\sample.mkv";
+		/**
+		 * This method gets MKV file format metadata
+		 * This method is supported by version 19.1 or greater
+		 */
+		public static void getMetadata() {
+			try (MatroskaFormat format = new MatroskaFormat(Common.mapSourceFilePath((path)))) {
+				System.out.printf("\nDocType: %s",format.getEbmlHeader().getDocType());
+				System.out.printf("\nDocTypeReadVersion: %s",format.getEbmlHeader().getDocTypeReadVersion());
+				System.out.printf("\nDocTypeVersion: %s",format.getEbmlHeader().getDocTypeVersion());
+				System.out.printf("\nReadVersion: %s",format.getEbmlHeader().getReadVersion());
+				System.out.printf("\nVersion: %s",format.getEbmlHeader().getVersion());
+			}
+
+		}
+
+		/**
+		 * This method gets Matroska Segment Info Metadata
+		 * This method is supported by version 19.1 or greater
+		 */
+		public static void matroskaSegmentInfoMetadata() {
+			try (MatroskaFormat format = new MatroskaFormat(Common.mapSourceFilePath((path)))) {
+				for (MatroskaSegmentInfoMetadata segment : format.getSegments())
+				{
+					System.out.printf("\nDateUtc: %s",segment.getDateUtc());
+					System.out.printf("\nDuration: %s",segment.getDuration());
+					System.out.printf("\nMuxingApp: %s",segment.getMuxingApp());
+					System.out.printf("\nSegmentFilename: %s",segment.getSegmentFilename());
+					System.out.printf("\nSegmentUid: %s",segment.getSegmentUid());
+					System.out.printf("\nTimecodeScale: %s",segment.getTimecodeScale());
+					System.out.printf("\nTitle: %s",segment.getTitle());
+					System.out.printf("\nWritingApp: %s",segment.getWritingApp());
+				}
+			}
+		}
+		/**
+		 * This method gets Matroska Tag Metadata
+		 * This method is supported by version 19.1 or greater
+		 */
+		public static void matroskaTagMetadata() {
+			try (MatroskaFormat format = new MatroskaFormat(Common.mapSourceFilePath((path)))) {
+				for (MatroskaTagMetadata tag : format.getTags())
+				{
+					System.out.printf("\nTargetType: %s",tag.getTargetType());
+					System.out.printf("\nTargetTypeValue: %s",tag.getTargetTypeValue());
+					System.out.printf("\nTagTrackUid: %s",tag.getTagTrackUid());
+					for (String key : tag.getSimpleTags().getKeys())
+					{
+						System.out.println(tag.getSimpleTags().readByStringKey(key).getFormattedValue());
+					}
+				}
+			}
+		}
+		/**
+		 * This method gets Matroska Track Metadata
+		 * This method is supported by version 19.1 or greater
+		 */
+		public static void matroskaTrackMetadata() {
+			try (MatroskaFormat format = new MatroskaFormat(Common.mapSourceFilePath((path)))) {
+				for (MatroskaTrackMetadata track : format.getTracks())
+				{
+					System.out.printf("\nCodecId: %s",track.getCodecId());
+					System.out.printf("\nCodecName: %s",track.getCodecName());
+					System.out.printf("\nDefaultDuration: %s",track.getDefaultDuration());
+					System.out.printf("\nFlagEnabled: %s",track.getFlagEnabled());
+					System.out.printf("\nLanguage: %s",track.getLanguage());
+					System.out.printf("\nLanguageIetf: %s",track.getLanguageIetf());
+					System.out.printf("\nName: %s",track.getName());
+					System.out.printf("\nTrackNumber: %s",track.getTrackNumber());
+					System.out.printf("\nTrackType: %s",track.getTrackType());
+					System.out.printf("\nTrackUid: %s",track.getTrackUid());
+
+					if (track instanceof MatroskaAudioTrackMetadata)
+					{
+						MatroskaAudioTrackMetadata audioTrack = (MatroskaAudioTrackMetadata)track;
+						System.out.printf("\nSamplingFrequency: %s",audioTrack.getSamplingFrequency());
+						System.out.printf("\nOutputSamplingFrequency: %s",audioTrack.getOutputSamplingFrequency());
+						System.out.printf("\nChannels: %s",audioTrack.getChannels());
+						System.out.printf("\nBitDepth: %s",audioTrack.getBitDepth());
+					}
+
+					if (track instanceof MatroskaVideoTrackMetadata)
+					{
+						MatroskaVideoTrackMetadata videoTrack = (MatroskaVideoTrackMetadata)track;
+						System.out.printf("\nFlagInterlaced: %s",videoTrack.getFlagInterlaced());
+						System.out.printf("\nFieldOrder: %s",videoTrack.getFieldOrder());
+						System.out.printf("\nStereoMode: %s",videoTrack.getStereoMode());
+						System.out.printf("\nAlphaMode: %s",videoTrack.getAlphaMode());
+						System.out.printf("\nPixelWidth: %s",videoTrack.getPixelWidth());
+						System.out.printf("\nPixelHeight: %s",videoTrack.getPixelHeight());
+						System.out.printf("\nPixelCropBottom: %s",videoTrack.getPixelCropBottom());
+						System.out.printf("\nPixelCropTop: %s",videoTrack.getPixelCropTop());
+						System.out.printf("\nPixelCropLeft: %s",videoTrack.getPixelCropLeft());
+						System.out.printf("\nPixelCropRight: %s",videoTrack.getPixelCropRight());
+						System.out.printf("\nDisplayWidth: %s",videoTrack.getDisplayWidth());
+						System.out.printf("\nDisplayHeight: %s",videoTrack.getDisplayHeight());
+						System.out.printf("\nDisplayUnit: %s",videoTrack.getDisplayUnit());
+					}
+				}
+			}
+		}
+	
+		/**
+        * This method reads all subtitles stored in an MKV video
+        * This method is supported by version 19.4 or greater 
+        */
+        public static void readAllMatroskaSubtitles()
+        {
+            //ExStart:ReadAllMatroskaSubtitles_19.4
+        	try (MatroskaFormat format = new MatroskaFormat(Common.mapSourceFilePath((path)))) {
+        		for (MatroskaSubtitleTrackMetadata subtitleTrack : format.getSubtitleTracks())
+                {
+                    String language = subtitleTrack.getLanguageIetf() ;
+                    if (language == null)
+                    {
+                        language = subtitleTrack.getLanguage();
+                    }
+                    System.out.println(language);
+                    for (MatroskaSubtitle subtitle : subtitleTrack.getSubtitles())
+                    {
+                        System.out.println(
+                                        "Timecode = " + Common.millisecondsToTimeFormattedString(subtitle.getTimecode()) + 
+                                        ", Duration = " + Common.millisecondsToTimeFormattedString(subtitle.getDuration()));
+                        System.out.println(subtitle.getText());
+                    }
+                }
+        	}
+            //ExEnd:ReadAllMatroskaSubtitles_19.4
+
+        }
+	
+	
+	}
+
+	 public static class Asf
+     {
+         //Source file path
+         private static String filePath = "Video/ASF/sample.asf";
+         /**
+         * This method gets ASF video native metadata
+         * This method is supported by version 19.2 or greater 
+         */
+         public static void GetMetadata()
+         {
+             //ExStart:GetASFNativeMetadata
+             try (AsfFormat format = new AsfFormat(Common.mapSourceFilePath(filePath)))
+             {
+                 // get AsfMetadata
+                 AsfMetadata metadata = format.getAsfInfo();
+
+                 //Display properties
+                 System.out.println("Creation date: "+metadata.getCreationDate());
+                 System.out.println("File id: "+ metadata.getFileId());
+                 System.out.println("Flags: "+ metadata.getFlags());
+
+                 // Display Asf Codec Information
+                 for (AsfCodecInfo codecInfo : metadata.getCodecInformation())
+                 {
+                     System.out.println("Codec type: "+ codecInfo.getCodecType());
+                     System.out.println("Description: "+ codecInfo.getDescription());
+                     System.out.println("Codec information: "+ codecInfo.getInformation());
+                     System.out.println(codecInfo.getName());
+                 }
+                 // Display metadata descriptors
+                 for (AsfBaseDescriptor descriptor : metadata.getMetadataDescriptors())
+                 {
+
+                     System.out.println("Name: "+ descriptor.getName());
+                     System.out.println("Formatted value: "+ descriptor.getFormattedValue());
+                     AsfMetadataDescriptor metadataDescriptor = (AsfMetadataDescriptor)descriptor ;
+                     if (metadataDescriptor != null)
+                     {
+                         System.out.println("Language: "+ metadataDescriptor.getLanguage());
+                         System.out.println("Stream number: "+ metadataDescriptor.getStreamNumber());
+                         System.out.println("Original name: "+ metadataDescriptor.getOriginalName());
+                     }
+                 }
+                 //Dispay the base stream related metadata 
+                 for (AsfBaseStreamProperty property : metadata.getStreamProperties())
+                 {
+                     System.out.println("Alternate bitrate: "+ property.getAlternateBitrate());
+                     System.out.println("Average bitrate: "+ property.getAverageBitrate());
+                     System.out.println("Average time per frame: "+ property.getAverageTimePerFrame());
+                     System.out.println("Bitrate: "+ property.getBitrate());
+                     System.out.println("Stream end time: "+ property.getEndTime());
+                     System.out.println("Stream flags: "+ property.getFlags());
+                     System.out.println("Stream language: "+ property.getLanguage());
+                     System.out.println("Stream start time: "+ property.getStartTime());
+                     System.out.println("Stream number: "+ property.getStreamNumber());
+                     System.out.println("Stream type: "+ property.getStreamType());
+                     
+                     //Display the audio stream related metadata
+                     AsfAudioStreamProperty audioStreamProperty = (AsfAudioStreamProperty)property ;
+                     if (audioStreamProperty != null)
+                     {
+                         System.out.println("Audio bits per sample: "+ audioStreamProperty.getBitsPerSample());
+                         System.out.println("Audio channels: "+ audioStreamProperty.getChannels());
+                         System.out.println("Audio format tag: "+ audioStreamProperty.getFormatTag());
+                         System.out.println("Audio samples per second: "+ audioStreamProperty.getSamplesPerSecond());
+                     }
+                     //Display the vedio stream related metadata
+                     AsfVideoStreamProperty videoStreamProperty = (AsfVideoStreamProperty)property ;
+                     if (videoStreamProperty != null)
+                     {
+                         System.out.println("Video bits per pixels: "+ videoStreamProperty.getBitsPerPixels());
+                         System.out.println("Compression: "+ videoStreamProperty.getCompression());
+                         System.out.println("Image height: "+ videoStreamProperty.getImageHeight());
+                         System.out.println("Image width: "+ videoStreamProperty.getImageWidth());
+                     }
+                 }
+             }
+             //ExEnd:GetASFNativeMetadata
+         }
+        
+         /**
+          * This method gets ASF video XMP metadata
+          * This method is supported by version 19.2 or greater 
+          */
+         public static void GetXMPMetadata()
+         {
+             //ExStart: GetASFXMPMetadata
+             try (AsfFormat asfFormat = new AsfFormat(Common.mapSourceFilePath(filePath)))
+             {
+                 //Get XMP Basic metadata
+                 XmpBasicPackage xmpMetadata = asfFormat.getXmpValues().getSchemes().getXmpBasic();
+
+                 // Display some properties from the XMP Basic metadata
+                 System.out.println("Creation date: "+ xmpMetadata.getCreateDate());
+                 System.out.println("Label: "+ xmpMetadata.getLabel());
+                 System.out.println("Rating: "+ xmpMetadata.getRating());
+             }
+
+             //ExEnd:GetASFXMPMetadata
+         }
+         
+         /**
+          * This method write ASF video XMP metadata
+          * This method is supported by version 19.2 or greater 
+          */ public static void SetXMPMetadata()
+         {
+             //ExStart: WriteASFXMPMetadata
+             try (AsfFormat asfFormat = new AsfFormat(Common.mapSourceFilePath(filePath)))
+             {
+                 //Get XMP Basic metadata
+            	 XmpBasicPackage xmpMetadata = asfFormat.getXmpValues().getSchemes().getXmpBasic();
+
+                 // set some properties to write xmp data
+                 xmpMetadata.setCreateDate( new Date());
+                 xmpMetadata.setRating(4);
+                 xmpMetadata.setNickname("ASF Video");
+
+                 // Update the ASF file
+                 asfFormat.save(Common.mapDestinationFilePath(filePath));
+             }
+
+             //ExEnd:WriteASFXMPMetadata
+         }
+          
+         /**
+          * This method remove ASF video XMP metadata
+          * This method is supported by version 19.2 or greater 
+          */
+          public static void RemoveXMPMetadata()
+         {
+             //ExStart: RemoveASFXMPMetadata
+             try (AsfFormat format = new AsfFormat(Common.mapSourceFilePath(filePath)))
+             {
+                 // Remove all XMP data from ASF file
+                 format.removeXmpData();
+                 
+                 // Update the ASF file
+                 format.save(Common.mapDestinationFilePath(filePath));
+             }
+
+             //ExEnd:RemoveASFXMPMetadata
+         }
+     }
+
+
 }

@@ -4,7 +4,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Properties;
+import java.util.TimeZone;
 
 import com.groupdocs.metadata.*;
 
@@ -47,6 +51,16 @@ public class Common {
             return  e.getMessage();
         }
     }
+    public static void printArray(String[] values)
+    {
+        if (values != null)
+        {
+            for (String value : values)
+            {
+                System.out.println(value);
+            }
+        }
+    }
     // returns output file path
     public static String mapDestinationFilePath(String outputFileName) {
         try {
@@ -57,7 +71,7 @@ public class Common {
         }
     }
     // shows how to use library in licensed mode using Dynabic.Metered account
-    public static void useDynabicMeteredAccount() {
+    public static void useDynabicMeteredAccount() throws Exception {
         // initialize Metered API
         Metered metered = new Metered();
 
@@ -77,11 +91,11 @@ public class Common {
         docFormat.removeHiddenData(new DocInspectionOptions(DocInspectorOptionsEnum.All));
 
         // and get consumption quantity
-        try {
-            Double consumptionQuantity = Metered.getConsumptionQuantity();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Double consumptionQuantity = Metered.getConsumptionQuantity();
+        
+        // and get consumption credit (Supported since version 19.5)
+        Double consumptionCredit = Metered.getConsumptionCredit();
+        
     }
     // gets directory name and recognizes format of files in that directory
     public static void getFileFormats(String directorPath) {
@@ -108,6 +122,13 @@ public class Common {
         {
             e.printStackTrace();
         }
+    }
+    public static String millisecondsToTimeFormattedString(double milliseconds)
+    {
+        Date date = new Date((long)milliseconds);
+        DateFormat formatter = new SimpleDateFormat("HH:mm:ss.SSS");
+        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return formatter.format(date);
     }
 
 }

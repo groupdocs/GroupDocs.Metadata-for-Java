@@ -16,14 +16,14 @@
         <repository>
             <id>GroupDocsJavaAPI</id>
             <name>GroupDocs Java API</name>
-            <url>https://artifact.groupdocs.com/repo/</url>
+            <url>https://repository.groupdocs.com/repo/</url>
         </repository>
     </repositories>
     <dependencies>
         <dependency>
             <groupId>com.groupdocs</groupId>
             <artifactId>groupdocs-metadata</artifactId>
-            <version>18.11</version>
+            <version>19.5.1</version>
         </dependency>
         <dependency>
             <groupId>commons-net</groupId>
