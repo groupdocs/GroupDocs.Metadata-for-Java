@@ -16,7 +16,7 @@ Add the dependency via Maven (coordinates from the [Java release hub](https://re
 <dependency>
   <groupId>com.groupdocs</groupId>
   <artifactId>groupdocs-metadata</artifactId>
-  <version>26.1</version>
+  <version>LATEST</version>
 </dependency>
 ```
 
